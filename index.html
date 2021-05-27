@@ -268,12 +268,13 @@
     <!--   <div id="legend" class="legend-box">
         <h4>PM 2.5 concentration<br>[µg/m3]</h4>
       </div> -->
-     <!--  <div id="legend" class="legend-box">
-        <h4>Overcapacity costs (MM USD)</br>[kt / year]</h4>
+     <div id="legend" class="legend-box">
+      <h4>Overcapacity share</br>
+     <!--    <h4>Overcapacity costs (MM USD)</br>[kt / year]</h4>
         <div><span class="circle"></span>10</div>
         <div><span class="circle"></span>100</div>
-        <div><span class="circle"></span>1000</div>
-      </div> -->
+        <div><span class="circle"></span>1000</div> -->
+      </div>
     </div>
 
     <div class="logos-box">
@@ -335,28 +336,16 @@
         .domain([0,0.2,0.4,0.6,0.8,1]);
 
       var scale_element = document.getElementById("legend");
-      const legend_levels = {
-        0: "0.5-1", //0.5 leads to wrong order
-        1: "1-2",
-        2: "2-4",
-        4: "4-6",
-        6: "6-8",
-        8: "8-10",
-        10: "10-15",
-        15: "15-20",
-        20: "20-25",
-        25: "25-30",
-        30: "30-35",
-        35: "35-40",
-        40: "40-45",
-        45: "45-50",
-        50: "50-55",
-        55: "55-60",
-        60: "60-65",
-        65: "65-70",
-        70: "70-80",
-        80: ">80"
-      }
+      [0, 0.2, 0.4, 0.6, 0.8, 1].forEach(function (i) {
+        scale_element.innerHTML +=
+          '<div><span style="background-color:' +
+          scale(Math.pow(i, pow)).hex() +
+          '"></span>' +
+          Math.round(i*100) + "%" +
+          "</div>";
+      });
+
+      
 
       
       var field_capacity = "Overcapacity (MW)"
@@ -442,7 +431,7 @@
           // Convert the range of data values to a suitable color
           // var green = row['color'] * 100 * 255;
           // var color = 'rgb(0, '+ green + ', 0)';
-          var color = scale(row['share_overcapacity']).hex()
+          var color = scale(Math.pow(row['share_overcapacity'],pow)).hex()
           console.log(color)
            
           matchExpression.push(row['iso3'], color);
