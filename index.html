@@ -200,9 +200,9 @@
 
       /* Logos and intro */
       .logos-box {
-        background-color: #fff;
-        border-radius: 3px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        /*background-color: #fff;*/
+        /*border-radius: 3px;*/
+        /*box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);*/
         font: 12px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
         /*padding: 10px;*/
         /*margin-top: 10px;*/
@@ -267,12 +267,12 @@
     <!--   <div id="legend" class="legend-box">
         <h4>PM 2.5 concentration<br>[µg/m3]</h4>
       </div> -->
-      <div id="legend" class="legend-box">
+     <!--  <div id="legend" class="legend-box">
         <h4>Overcapacity costs (MM USD)</br>[kt / year]</h4>
         <div><span class="circle"></span>10</div>
         <div><span class="circle"></span>100</div>
         <div><span class="circle"></span>1000</div>
-      </div>
+      </div> -->
     </div>
 
     <div class="logos-box">
@@ -282,12 +282,12 @@
       <div class="logos">
         <a href="https://energyandcleanair.org">
           <img
-            src="https://energyandcleanair.org/wp/wp-content/uploads/2020/01/CREA-logo.svg"
-            height="40px"
+            src="imgs/CREA-logo.svg"
+            height="45px"
         /></a>
          <a href="https://www.transitionzero.org/">
           <img
-            src="imgs/transition_zero.jpg"
+            src="imgs/transition_zero_dark.jpg"
             height="42px"
         /></a>
       </div>
@@ -424,8 +424,8 @@
             type: 'geojson',
             data: `https://raw.githubusercontent.com/energyandcleanair/202105_overcapacity_indonesia_map/master/data/units.geojson`,
             cluster: true,
-            clusterMaxZoom: 8, // Max zoom to cluster points on
-            clusterRadius: 30,
+            clusterMaxZoom: 7, // Max zoom to cluster points on
+            clusterRadius: 35,
             clusterProperties:{
               "clustered_sum": ["+", ["get", field_name]]
             }
@@ -582,11 +582,11 @@
 
       // enumerate ids of the layers
       var toggleableLayerIds = [
-        {
-          id: "layer-powerplants",
-          name: "Fossil Fueled Power Plants",
-          visibility: "visible",
-        },
+        // {
+        //   id: "layer-powerplants",
+        //   name: "Fossil Fueled Power Plants",
+        //   visibility: "visible",
+        // },
       ];
 
       // set up the corresponding toggle button for each layer
@@ -636,7 +636,8 @@
           map_.getCanvas().style.cursor = "pointer";
           var coordinates = e.features[0].geometry.coordinates.slice();
           var props = e.features[0].properties;
-          var legend = `<div class="popup"><h4>${props.Plant}</h4><span>Fuel: ${props.Fuel}</span><span>${field_name}: ${props[field_name]}</span></div>`;
+          var field_value = Math.round(props[field_name])
+          var legend = `<div class="popup"><h4>${props.Plant}</h4><span>${field_name}: ${field_value}</span></div>`;
           while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
           }
