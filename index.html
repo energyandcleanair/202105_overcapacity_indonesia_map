@@ -260,7 +260,7 @@
       <div id='map'></div>
     </div>
     <div id="title" class="title">
-      <h2>Coal Overcapacity Cost (MM USD)</h2>
+      <h2>Coal Overcapacity (MW)</h2>
     </div>
     <div class="legend">
       <nav id="menu"></nav>
@@ -288,7 +288,7 @@
          <a href="https://www.transitionzero.org/">
           <img
             src="imgs/transitionzero_dark.png"
-            height="42px"
+            height="40px"
         /></a>
       </div>
     </div>
@@ -355,7 +355,9 @@
       }
 
       
-      var field_name = "Overcapacity costs (MM USD)"
+      var field_capacity = "Overcapacity (MW)"
+      var field_cost = "FOM (MM USD)"
+
       var powerplants_name = "powerplants";
       var powerplants_source = {
         type: "vector",
@@ -427,7 +429,8 @@
             clusterMaxZoom: 7, // Max zoom to cluster points on
             clusterRadius: 35,
             clusterProperties:{
-              "clustered_sum": ["+", ["get", field_name]]
+              "clustered_capacity": ["+", ["get", field_capacity]],
+              "clustered_cost": ["+", ["get", field_cost]]
             }
           });
 
@@ -438,7 +441,7 @@
           layout: {
             visibility: "visible",
           },
-          filter: ['has', "clustered_sum"],
+          filter: ['has', "clustered_capacity"],
           paint: {
             "circle-radius": [
               "interpolate",
@@ -446,13 +449,13 @@
               [
               "sqrt",
                 ["get",
-                "clustered_sum"]
+                "clustered_capacity"]
               ],
-              Math.sqrt(1),
-              5,
-              Math.sqrt(500),
-              30,
-              Math.sqrt(5000),
+              Math.sqrt(100),
+              7,
+              // Math.sqrt(1000),
+              // 30,
+              Math.sqrt(20000),
               50
             ],
             "circle-stroke-color": "#B71616",
@@ -469,7 +472,7 @@
           layout: {
             visibility: "visible",
           },
-          filter: ["!", ['has', "clustered_sum"]],
+          filter: ["!", ['has', "clustered_capacity"]],
           paint: {
             "circle-radius": [
               "interpolate",
@@ -477,16 +480,17 @@
               [
               "sqrt",
                 ["get",
-                field_name]
+                field_capacity]
               ],
-              Math.sqrt(1),
-              5,
-              Math.sqrt(500),
-              30,
-              Math.sqrt(5000),
+              Math.sqrt(100),
+              7,
+              // Math.sqrt(1000),
+              // 30,
+              Math.sqrt(20000),
               50
             ],
             "circle-stroke-color": "#B71616",
+            "circle-stroke-opacity": 0.8,
             "circle-stroke-width": 2,
             "circle-opacity": 0.5,
             "circle-color": "#B71616"
@@ -498,9 +502,9 @@
           id: 'layer-units-text-nonclustered',
           type: 'symbol',
           source: 'source-units',
-          filter: ["!", ['has', "clustered_sum"]],
+          filter: ["!", ['has', "clustered_capacity"]],
           layout: {
-          'text-field': ["to-string",["round", ["get", field_name]]],
+          'text-field': ["to-string",["round", ["get", field_capacity]]],
           'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
           'text-size': 15
           }
@@ -511,9 +515,9 @@
           id: 'layer-units-text-clustered',
           type: 'symbol',
           source: 'source-units',
-          filter: ['has', "clustered_sum"],
+          filter: ['has', "clustered_capacity"],
           layout: {
-          'text-field': ["to-string",["round", ["get", "clustered_sum"]]],
+          'text-field': ["to-string",["round", ["get", "clustered_capacity"]]],
           'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
           'text-size': 15
           }
@@ -636,8 +640,10 @@
           map_.getCanvas().style.cursor = "pointer";
           var coordinates = e.features[0].geometry.coordinates.slice();
           var props = e.features[0].properties;
-          var field_value = Math.round(props[field_name])
-          var legend = `<div class="popup"><h4>${props.Plant}</h4><span>${field_name}: ${field_value}</span></div>`;
+          var capacity = Math.round(props[field_capacity])
+          var cost = Math.round(props[field_cost])
+          var legend = `<div class="popup"><h4>${props.Plant}</h4><span>Overcapacity: ${capacity}MW</span>
+          <span>Fixed operations and maintenance cost: ${cost}MM USD</span></div>`;
           while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
           }
@@ -653,9 +659,10 @@
           map_.getCanvas().style.cursor = "pointer";
           var coordinates = e.features[0].geometry.coordinates.slice();
           var props = e.features[0].properties;
-          var field_sum = Math.round(props["clustered_sum"])
-          var legend = `<div class="popup"><h4>${props.point_count} plants</h4>
-                        <span>${field_name}: ${field_sum}</span></div>`;
+          var capacity = Math.round(props["clustered_capacity"])
+          var cost = Math.round(props["clustered_cost"])
+          var legend = `<div class="popup"><h4>${props.point_count} plants</h4><span>Overcapacity: ${capacity}MW</span>
+          <span>Fixed operations and maintenance cost: ${cost}MM USD</span></div>`;
           while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
           }
