@@ -463,7 +463,7 @@
             data: `https://raw.githubusercontent.com/energyandcleanair/202105_overcapacity_indonesia_map/master/data/units.geojson`,
             cluster: true,
             clusterMaxZoom: 7, // Max zoom to cluster points on
-            clusterRadius: 35,
+            clusterRadius: 40,
             clusterProperties:{
               "clustered_capacity": ["+", ["get", field_capacity]],
               "clustered_cost": ["+", ["get", field_cost]]
@@ -488,11 +488,11 @@
                 "clustered_capacity"]
               ],
               Math.sqrt(100),
-              7,
+              5,
               // Math.sqrt(1000),
               // 30,
               Math.sqrt(20000),
-              50
+              20
             ],
             "circle-stroke-color": "#B71616",
             "circle-stroke-width": 2,
@@ -519,11 +519,11 @@
                 field_capacity]
               ],
               Math.sqrt(100),
-              7,
+              5,
               // Math.sqrt(1000),
               // 30,
               Math.sqrt(20000),
-              50
+              20
             ],
             "circle-stroke-color": "#B71616",
             "circle-stroke-opacity": 0.8,
